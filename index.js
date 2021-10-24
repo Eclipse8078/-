@@ -184,9 +184,10 @@ client.on("message", (Message) => {
 
 client.on("message", (Message) => {
   if (Message.content === "마약봇 웃어줘") {
-    Message.channel.send(
-      "아이고 배야ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ아이고 배야\n아이고 배야ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ아이고 배야\n아이고 배야ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ아이고 배야\n아이고 배야ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ아이고 배야\n아이고 배야ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ아이고 배야\n"
-    );
+    const randomNumber = Math.floor(Math.random() * 10) + 1;
+    parseInt(randomNumber);
+    var randomMessage = "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ".repeat(randomNumber);
+    Message.channel.send(`${randomMessage}`);
   }
 });
 
@@ -275,6 +276,26 @@ client.on("message", (Message) => {
 client.on("message", (Message) => {
   if (Message.content === "샌즈") {
     Message.react("<:sans:875151010367143936>");
+  }
+});
+
+client.on("message", (Message) => {
+  if (Message.content.startsWith("!봇 프사 제작자")) {
+    let role = Message.guild.roles.cache.find(
+      (role) => role.id === "901469987997351978"
+    );
+    let member = Message.mentions.members.first();
+    if (
+      Message.member.roles.cache.has("862601749268398110") ||
+      Message.member.roles.cache.has("862601749268398110")
+    ) {
+      member.roles.add(role);
+      Message.channel.send(
+        `${member}에게 **봇 프사 제작자** 역할이 지급되었습니다!`
+      );
+    } else {
+      Message.channel.send("권한이 부족합니다!");
+    }
   }
 });
 
