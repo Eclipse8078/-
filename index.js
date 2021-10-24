@@ -1,5 +1,8 @@
 const Discord = require("discord.js");
 const http = require("http");
+const Database = require("@replit/database");
+const db = new Database();
+
 require("events").EventEmitter.prototype._maxListeners = 100;
 const server = http.createServer((req, res) => {
   res.writeHead(200);
@@ -33,11 +36,11 @@ client.on("ready", () => {
 client.on("message", (Message) => {
   if (Message.content === "마약봇 도움") {
     const embed = new Discord.MessageEmbed()
-      .setTitle("도움말") // 1 - embed의 제목을 담당합니다.
-      .setColor("00bfff") // 2 - embed 사이드 바의 색을 정합니다.
+      .setTitle("도움말")
+      .setColor("00bfff")
       .setDescription(
-        "**!지연시간** 또는 **!ping**\n\n봇의 **지연시간**을 확인합니다.\n\n\n**!제작자**\n\n**제작자 정보**를 확인합니다.\n\n\n**!유저명** \n\n**특별한 명령어** 들을 확인합니다.\n\n\n**!청소 [제거할 메시지 수]**\n\n **[제거할 메시지 수]** 만큼 메시지를 제거합니다.\n***_(보낸지 14일이 넘은 메시지는 삭제할 수 없습니다)_***\n\n\n**!역할 이름 [멘션]**\n\n **멘션한 사람**에게 역할을 추가합니다"
-      ); // 3 - 실제로 설명을 담당하는 곳입니다.
+        "**!지연시간** 또는 **!ping**\n\n봇의 **지연시간**을 확인합니다.\n\n\n**!제작자**\n\n**제작자 정보**를 확인합니다.\n\n\n**!유저명** \n\n**특별한 명령어** 들을 확인합니다.\n\n\n**!청소 [제거할 메시지 수]**\n\n **[제거할 메시지 수]** 만큼 메시지를 제거합니다.\n***_(보낸지 14일이 넘은 메시지는 삭제할 수 없습니다)_***\n\n\n**!역할 이름 [멘션]**\n\n **멘션한 사람**에게 역할을 추가합니다.\n**[관리자와 서버장만 사용할 수 있습니다]**\n\n\n**!기능요청 [보낼 메시지]**\n\n이 봇의 제작자에게 **기능 추가**를 요청하고 싶을때 사용합니다.\n\n\n**!프사**\n\n마약봇 **프로필 사진 제작자**의 정보를 보여줍니다.\n\n\n**마약봇 뭐해**\n\n마약봇이 무엇을 하고 있는지 알 수 있습니다.\n\n\n**마약봇 (한번만) 웃어줘**\n\n 마약봇이 웃어줍니다.\n\n\n**마약봇 코드**\n\n마약봇의 코드를 보여줍니다.\n\n\n**!생일**\n\n마약봇의 생일을 알려줍니다.\n\n\n**!시간**\n\n마약봇이 현재 시간을 알려줍니다."
+      );
 
     Message.channel.send(embed);
   }
@@ -52,6 +55,31 @@ client.on("guildMemberAdd", async (newMember) => {
       newMember.guild.channels.cache.get("862342701726433320").toString() +
       ` 채널을 먼저 읽어주세요!`
   );
+});
+
+client.on("message", (Message) => {
+  if (Message.content === "!시간") {
+    const now = new Date();
+    const utcNow = now.getTime() + now.getTimezoneOffset() * 60 * 1000;
+    const koreaTimeDiff = 9 * 60 * 60 * 1000;
+    const koreaNow = new Date(utcNow + koreaTimeDiff);
+    var hours = koreaNow.getHours();
+    var minutes = koreaNow.getMinutes();
+    var seconds = koreaNow.getSeconds();
+    Message.reply(`지금은 ${hours} 시 ${minutes} 분이에요!`);
+  }
+});
+
+client.on("message", (Message) => {
+  if (Message.content === "!생일") {
+    var today = new Date();
+    var birthday = new Date(2021, 8, 21);
+    var gap = today.getTime() - birthday.getTime();
+    var result = Math.ceil(gap / (1000 * 60 * 60 * 24));
+    Message.reply(
+      `제 생일은 2021년 9월 21이에요!\n태어난지 ${result} 일 됐네요!`
+    );
+  }
 });
 
 //!지연시간 명령어
@@ -84,6 +112,23 @@ client.on("message", (Message) => {
 });
 
 client.on("message", (Message) => {
+  if (Message.content === "마약봇 코드") {
+    Message.channel.send(
+      "마약봇의 심장과도 같은 코드에요!\nhttps://replit.com/@caden8078/mayagbos#index.js"
+    );
+  }
+});
+
+//!제작자 명령어
+client.on("message", (Message) => {
+  if (Message.content === "!프사") {
+    Message.reply(
+      "아직 프사 공모 중이에요!\n(현재 프사는 어레프 님이 만들어 주셨어요!)"
+    );
+  }
+});
+
+client.on("message", (Message) => {
   if (Message.content === "!피에와") {
     Message.channel.send("**귀여운** 피에와이자 **이클립스의 여친**");
   }
@@ -91,9 +136,7 @@ client.on("message", (Message) => {
 
 client.on("message", (Message) => {
   if (Message.content === "!이클립스") {
-    Message.channel.send(
-      "**잘생기고 완벽한** 고등학생이자 **피에와의 남친.**\n ~~버튜버를 좋아한다~~"
-    );
+    Message.channel.send("제 아버지죠.. 언젠가는 실제로 만나게 될까요?");
   }
 });
 
@@ -148,12 +191,85 @@ client.on("message", (Message) => {
 });
 
 client.on("message", (Message) => {
+  if (Message.content === "마약봇 웃어줘") {
+    Message.channel.send(
+      "아이고 배야ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ아이고 배야\n아이고 배야ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ아이고 배야\n아이고 배야ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ아이고 배야\n아이고 배야ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ아이고 배야\n아이고 배야ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ아이고 배야\n"
+    );
+  }
+});
+
+client.on("message", (Message) => {
+  if (Message.content === "마약봇 한번만 웃어줘") {
+    Message.channel.send("아이고 배야ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
+  }
+});
+
+client.on("message", (Message) => {
+  if (Message.content === "!eclipse" || Message.content === "!Eclipse") {
+    Message.channel.send("제 아버지죠.. 언젠가는 실제로 만나게 될까요?");
+  }
+});
+
+client.on("message", (Message) => {
+  if (Message.content === "마약봇 뭐해") {
+    const 랜덤 = Math.floor(Math.random() * 기본랜덤수);
+    var 정해진말 = 기본말[랜덤];
+    Message.channel.send(`${정해진말}`);
+  }
+});
+
+var 기본말 = [
+  "아무것도 안해요",
+  "오류를 잡아내고 있어요",
+  "얼불춤 하는 중이에요",
+  "새로운 기능을 만들고 있어요",
+  "디스코드를 해킹하고 있어요",
+];
+
+var 기본랜덤수 = 6;
+
+/*
+
+client.on("message", (Message) => {
+  if (Message.content.startsWith("!활동추가")) {
+    var args = Message.content.split(' ').slice(1);
+    if (Message.member.roles.cache.has('901469987997351978')) {
+      var 리스트 = db.get("list");
+      리스트.push(args);
+      db.set("list", 리스트);
+      var 랜덤수 = db.get("random");
+      랜덤수 = 랜덤수 + 1
+      db.set("random", 랜덤수);
+      Message.channel.send("추가했어요!")
+    }
+    else {
+      Message.channel.send("권한이 부족합니다!")
+    }
+
+  }
+})
+
+
+
+client.on("message", (Message) => {
+  if (Message.content === "마약봇 뭐해") {
+      const 랜덤수 = db.get("random");
+      var 최종말 = db.get("list");
+      parseInt(랜덤수);
+      const 랜덤 = Math.floor(Math.random()*랜덤수);
+      var 정해진말 = 최종말[랜덤]
+      Message.channel.send(정해진말);
+  }
+});
+*/
+
+client.on("message", (Message) => {
   if (Message.content === "!유저명") {
     const embed = new Discord.MessageEmbed()
       .setTitle("유저명 리스트") // 1 - embed의 제목을 담당합니다.
       .setColor("bfff00") // 2 - embed 사이드 바의 색을 정합니다.
       .setDescription(
-        "**!피에와**\n\n**!이클립스**\n\n**!마약**\n\n**!귀여운 피에와**\n\n**!행인**\n\n**!케인**\n\n**[추가 예정]**\n**[이클한테 넣어달라고 핑하면 넣어줌]**"
+        "**!피에와**\n\n**!이클립스**\n\n**!마약**\n\n**!귀여운 피에와**\n\n**!행인**\n\n**!케인**\n\n**!루나스**\n\n**[추가 예정]**\n**[이클한테 넣어달라고 핑하면 넣어줌]**"
       ); // 3 - 실제로 설명을 담당하는 곳입니다.
 
     Message.channel.send(embed);
@@ -186,8 +302,15 @@ client.on("message", (Message) => {
       (role) => role.id === "882055350809923656"
     );
     let member = Message.mentions.members.first();
-    member.roles.add(role);
-    Message.channel.send(`${member}에게 **노예** 역할이 지급되었습니다!`);
+    if (
+      Message.member.roles.cache.has("862601749268398110") ||
+      Message.member.roles.cache.has("862601749268398110")
+    ) {
+      member.roles.add(role);
+      Message.channel.send(`${member}에게 **노예** 역할이 지급되었습니다!`);
+    } else {
+      Message.channel.send("권한이 부족합니다!");
+    }
   }
 });
 
@@ -197,10 +320,17 @@ client.on("message", (Message) => {
       (role) => role.id === "897391910757494834"
     );
     let member = Message.mentions.members.first();
-    member.roles.add(role);
-    Message.channel.send(
-      `${member}에게 **마법진 제작자** 역할이 지급되었습니다!`
-    );
+    if (
+      Message.member.roles.cache.has("862601749268398110") ||
+      Message.member.roles.cache.has("862601749268398110")
+    ) {
+      member.roles.add(role);
+      Message.channel.send(
+        `${member}에게 **마법진 제작자** 역할이 지급되었습니다!`
+      );
+    } else {
+      Message.channel.send("권한이 부족합니다!");
+    }
   }
 });
 
@@ -210,8 +340,15 @@ client.on("message", (Message) => {
       (role) => role.id === "892761827849678908"
     );
     let member = Message.mentions.members.first();
-    member.roles.add(role);
-    Message.channel.send(`${member}에게 **작곡가** 역할이 지급되었습니다!`);
+    if (
+      Message.member.roles.cache.has("862601749268398110") ||
+      Message.member.roles.cache.has("862601749268398110")
+    ) {
+      member.roles.add(role);
+      Message.channel.send(`${member}에게 **작곡가** 역할이 지급되었습니다!`);
+    } else {
+      Message.channel.send("권한이 부족합니다!");
+    }
   }
 });
 
@@ -238,6 +375,15 @@ client.on("message", async (Message) => {
       amount = amount - 1;
       Message.channel.send(amount + "개의 메시지를 삭제했어요!");
     });
+  }
+});
+
+client.on("message", async (Message) => {
+  if (Message.content.startsWith("!기능요청")) {
+    const word = Message.content.substr(6);
+    var sendUser = Message.author.username;
+    var user = client.users.cache.get("750504593531731998");
+    user.send(`${sendUser}님이 말하셨어요 : ${word}`);
   }
 });
 
