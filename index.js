@@ -77,7 +77,7 @@ client.on("message", (Message) => {
     var gap = today.getTime() - birthday.getTime();
     var result = Math.ceil(gap / (1000 * 60 * 60 * 24));
     Message.reply(
-      `제 생일은 2021년 9월 21이에요!\n태어난지 ${result} 일 됐네요!`
+      `제 생일은 2021년 9월 21일이에요!\n태어난지 ${result} 일 됐네요!`
     );
   }
 });
