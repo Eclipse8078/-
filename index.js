@@ -193,7 +193,7 @@ client.on("message", (Message) => {
 
 client.on("message", (Message) => {
   if (Message.content === "마약봇 한번만 웃어줘") {
-    Message.channel.send("아이고 배야ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
+    Message.channel.send("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
   }
 });
 
